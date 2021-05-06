@@ -50,6 +50,11 @@ FROM Accounts ac
 WHERE ac.clientId NOT IN (SELECT ac2.clientId FROM Accounts ac2 WHERE ac.bankId <> ac2.bankId)
 GROUP BY ac.bankId
 
+SELECT ac.bankId, ac.clientId
+FROM Accounts ac
+WHERE ac.clientId NOT IN (SELECT ac2.clientId FROM Accounts ac2 WHERE ac.bankId <> ac2.bankId)
+GROUP BY ac.bankId
+
 
 /* EJERCICIO 8 */
 /* Bancos con el cliente de menor saldo */
