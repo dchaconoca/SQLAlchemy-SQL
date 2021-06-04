@@ -1,3 +1,7 @@
+/*##############################################################
+# Consultas SQL varias
+# Autor: Diana Chacón Ocariz
+############################################################### */
 
 /* EJERCICIO 1 */
 /* Id de los clientes */
@@ -46,6 +50,11 @@ ORDER BY sum(ac.balance)
 /* Bancos con la cantidad de clientes que solo están en ese banco */
 /* Solo los clientes id = 4 y 6 tienen cuenta en un solo banco */
 SELECT ac.bankId, count(DISTINCT ac.clientId)
+FROM Accounts ac
+WHERE ac.clientId NOT IN (SELECT ac2.clientId FROM Accounts ac2 WHERE ac.bankId <> ac2.bankId)
+GROUP BY ac.bankId
+
+SELECT ac.bankId, ac.clientId
 FROM Accounts ac
 WHERE ac.clientId NOT IN (SELECT ac2.clientId FROM Accounts ac2 WHERE ac.bankId <> ac2.bankId)
 GROUP BY ac.bankId

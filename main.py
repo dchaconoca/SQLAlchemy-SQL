@@ -1,3 +1,10 @@
+###############################################################
+# Utilización de SQLAlchemy (ORM) y carga de datos: 
+#   - Creación de base SQLite con tablas según modelos
+#   - Lectura de archivos JSON y carga de datos en las tablas
+# Autor: Diana Chacón Ocariz
+###############################################################
+
 import db
 import loadData
 
