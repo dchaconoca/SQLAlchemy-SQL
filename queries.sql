@@ -4,31 +4,27 @@
 ############################################################### */
 
 /* EJERCICIO 1 */
-/* Id de los clientes */
-SELECT id FROM Clients
-
-/* EJERCICIO 2 */
-/* Id de los clientes ordenados por RUT */
-SELECT id 
+/* Nombre y taxNumber de los clientes ordenados por taxNumber */
+SELECT name, taxNumber 
 FROM Clients
 ORDER BY taxNumber
 
-/* EJERCICIO 3 */
+/* EJERCICIO 2 */
 /* Clientes con su saldo total, ordenados por saldo decreciente */
 SELECT cl.id, cl.name, sum(ac.balance)
 FROM Clients cl JOIN Accounts ac ON cl.id = ac.clientId
 GROUP BY cl.id 
 ORDER BY sum(ac.balance) DESC
 
-/* EJERCICIO 4 */
-/* Bancos con sus clientes y sus RUT ordenados por */
+/* EJERCICIO 3 */
+/* Bancos con sus clientes y sus taxNumber ordenados por */
 /* nombre del banco y nombre de los clientes */
 SELECT DISTINCT bk.name, cl.name, cl.taxNumber
 FROM Banks bk JOIN Accounts ac ON bk.id = ac.bankId 
 JOIN Clients cl ON cl.id = ac.clientId
 ORDER BY bk.name, cl.name
 
-/* EJERCICIO 5 */
+/* EJERCICIO 4 */
 /* Clientes del banco Santander con un saldo mayor a 25000 */
 /* ordenados por saldo decreciente */
 SELECT cl.id, cl.name, sum(ac.balance)
@@ -38,13 +34,21 @@ GROUP BY cl.id
 HAVING sum(ac.balance) >= 25000
 ORDER BY sum(ac.balance) DESC
 
-/* EJERCICIO 6 */
+/* EJERCICIO 5 */
 /* Bancos con el total de dinero que manejan */
 /* ordenados crecientemente */
-SELECT DISTINCT bk.id, bk.name, sum(ac.balance)
+SELECT bk.id, bk.name, sum(ac.balance)
 FROM Banks bk JOIN Accounts ac ON bk.id = ac.bankId
-GROUP BY bk.id, bk.name
+GROUP BY bk.id
 ORDER BY sum(ac.balance) 
+
+/* EJERCICIO 6 */
+/* Bancos y sus clientes con el saldo total de cada uno */
+SELECT bk.name, cl.name,  sum(ac.balance)
+FROM Banks bk JOIN Accounts ac ON bk.id = ac.bankId
+JOIN Clients cl ON ac.clientId = cl.id 
+GROUP BY bk.name, cl.name
+
 
 /* EJERCICIO 7 */
 /* Bancos con la cantidad de clientes que solo están en ese banco */
@@ -62,7 +66,6 @@ GROUP BY ac.bankId
 
 /* EJERCICIO 8 */
 /* Bancos con el cliente de menor saldo */
-
 /* Vista con los bancos, sus clientes y el saldo total de cada uno */
 CREATE VIEW TotalBalanceBankClient AS
 SELECT ac.bankId AS bankId, ac.clientId AS clientId, sum(ac.balance) AS total
@@ -74,3 +77,12 @@ SELECT bk.name, cl.name, min(tb.total)
 FROM Banks bk JOIN TotalBalanceBankClient tb ON bk.id = tb.bankId 
 JOIN Clients cl ON tb.clientId = cl.id
 GROUP BY tb.bankId 
+
+
+/* Bancos con el nombre del cliente con el menor saldo utilizando una subconsulta */
+SELECT bk.name, cl.name, min(total)
+FROM Banks bk JOIN (SELECT ac.bankId AS bankId, ac.clientId AS clientId, sum(ac.balance) AS total
+FROM Accounts ac
+GROUP BY ac.bankId, ac.clientId ) ON bk.id = bankId 
+JOIN Clients cl ON clientId = cl.id
+GROUP BY bankId 
